@@ -5,8 +5,6 @@ import telebot
 class Search_menu(Menu):  # Поиск
     def __init__(self, message, userdata, bot, regular_id = None):
         super().__init__(message=message, userdata=userdata, bot=bot, state=CONSTANT.NAME_SEARCH_MENU, regular_id = regular_id)
-        self.etap = etap
-        self.result = None
 
     def update(self, message):
         keyboard = telebot.types.ReplyKeyboardMarkup(True)

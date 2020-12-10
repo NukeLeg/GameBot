@@ -55,18 +55,3 @@ class MenuManager:
                 self.user_menu[message.chat.id] = new_user_menu
                 self.userdata.change_state_menu(message.chat.id, new_user_menu.state)
                 self.userdata.write_to_file()
-
-    def update_call(self, call):
-        id = call.from_user.id
-        for key in self.user_menu:
-            if id == key:
-                self.user_menu[id].info(call) # todo Заміть циклу пошуку використати спеціалізовану функцію
-                return
-        self.userdata.change_state_menu_to_search(id)
-        self.user_menu[id] = Search_menu(message=None, userdata=self.userdata, bot = self.bot, regular_id = call.from_user.id, etap = 3)
-        self.user_menu[id].info(call)
-
-    def advertisement(self):
-        for i in range(len(self.userdata.users)):
-            self.bot.send_message(self.userdata.users[i].id, "Тест рекламної розслки", )
-
