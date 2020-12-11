@@ -7,11 +7,11 @@ class Start_menu(Menu): # Старт меню
         super().__init__(message = message, userdata = userdata, bot = bot, state = CONSTANT.NAME_START_MENU, regular_id = regular_id)
     def update(self, message):
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
-        keyboard.row('Кнопка')
-        self.bot.send_message(self.regular_id, '---', reply_markup = keyboard)
+        keyboard.row('Старт')
+        self.bot.send_message(self.regular_id, 'Welcome', reply_markup = keyboard)
     def press(self, message):
-        if message.text == 'Назад':
-            from Menu.Search_menu import Search_menu
-            menu = Search_menu(message, self.userdata, self.bot)
+        if message.text == 'Старт':
+            from Menu.General_menu import General_menu
+            menu = General_menu(message, self.userdata, self.bot)
             return menu
         return self
