@@ -16,7 +16,7 @@ def welcome(message):
 
 @bot.message_handler(content_types = ['text'])
 def conversation(message):
-    menu_manager.get_state_menu(message)
+    menu_manager.get_state_menu_if_user_is_not_in_operation_memory(message)
     menu_manager.update_menu(message)
 
 bot.polling(none_stop=True)

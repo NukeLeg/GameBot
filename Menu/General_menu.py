@@ -15,7 +15,11 @@ class General_menu(Menu):
 
     def press(self, message):
         if message.text == 'Профіль':
-            from Menu.Home_menu.Home_menu import Home_menu
+            from Menu.Home.Home_menu import Home_menu
             menu = Home_menu(message, self.userdata, self.bot)
+            return menu
+        if message.text == 'Казино':
+            from Menu.Casino.Casino_menu import Casino_menu
+            menu = Casino_menu(message, self.userdata, self.bot)
             return menu
         return self
