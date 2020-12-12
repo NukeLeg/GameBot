@@ -1,5 +1,6 @@
 import CONSTANT
 from Menu.Menu import Menu
+from Menu.Casino.Automat import Automat
 import telebot
 
 class Automat_menu(Menu):
@@ -8,24 +9,43 @@ class Automat_menu(Menu):
         self.last_stavka = 0
         self.money = 0
         self.types_of_stavka = [1, 10, 100, 1000, 10000]
+        self.automat = Automat()
         super().__init__(message=message, userdata=userdata, bot=bot, state=CONSTANT.NAME_AUTOMAT_MENU, regular_id=regular_id)
 
     def update(self, message): # На початку
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
+        self.money = self.userdata.find_user_money(self.regular_id)
+        if self.money <= 0:
+            keyboard.keyboard('Піти в банк і взяти кредит щоб відігратися')
+        elif self.money < 10:
+            keyboard.row('Крихітна ставка')
+        elif self.money > 10000:
+            keyboard.row('Гіганська ставка')
         keyboard.row('Мала ставка', 'Середня ставка', 'Велика ставка')
         keyboard.row("Інфо", 'Назад🚪', 'На головне меню❌')
-        self.money = self.userdata.find_user_money(self.regular_id)
         self.bot.send_message(self.regular_id, 'У Вас 💰' + str(self.money) + "\nЯка ставка?", reply_markup = keyboard)
 
     def update1(self, message): # Після ставки
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
+        if self.money <= 0:
+            keyboard.keyboard('Піти в банк і взяти кредит щоб відігратися')
+        elif self.money < 10:
+            keyboard.row('Крихітна ставка')
+        elif self.money > 10000:
+            keyboard.row('Гіганська ставка')
         keyboard.row('Мала ставка', 'Середня ставка', 'Велика ставка')
         keyboard.row('Крутити 🎰')
         keyboard.row("Інфо", 'Назад🚪', 'На головне меню❌')
-        self.bot.send_message(self.regular_id, 'Ставка зроблена 💰' + str(self.my_stavka), reply_markup = keyboard)
+        self.bot.send_message(self.regular_id, 'Ставка зроблена 💰' + str(self.my_stavka) + "\nНа рахунку 💰" + str(self.money), reply_markup = keyboard)
 
     def update2(self, message): # Після кручення якщо хватає грошей
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
+        if self.money <= 0:
+            keyboard.keyboard('Піти в банк і взяти кредит щоб відігратися')
+        elif self.money < 10:
+            keyboard.row('Крихітна ставка')
+        elif self.money > 10000:
+            keyboard.row('Гіганська ставка')
         keyboard.row('Мала ставка', 'Середня ставка', 'Велика ставка')
         keyboard.row('Крутити знову 🎰')
         keyboard.row("Інфо", 'Назад🚪', 'На головне меню❌')
@@ -79,6 +99,8 @@ class Automat_menu(Menu):
         elif message.text == "Крутити знову 🎰" and self.last_stavka > 0 and self.money > self.last_stavka:
             self.my_stavka = self.last_stavka
             self.money = self.money - self.my_stavka
+            self.bot.send_message(self.regular_id, 'Ставка зроблена 💰' + str(self.my_stavka) +
+                                  "\nНа рахунку 💰" + str(self.money))
             self.spin()
             self.last_stavka = self.my_stavka
             self.my_stavka = 0
@@ -86,8 +108,8 @@ class Automat_menu(Menu):
                 self.update2(message)
             else:
                 self.update(message)
-        elif message.text == 'Інфо':
-            self.bot.send_message(self.regular_id, '+')
+        elif message.text == 'Інфо': self.bot.send_message(self.regular_id, self.automat.info())
+        elif message.text == 'Піти в банк і взяти кредит щоб відігратися': self.bot.send_message(self.regular_id, "Поки банк не доступний, не побудували")
         elif message.text == 'Назад🚪':
             from Menu.Casino.Casino_menu import Casino_menu
             menu = Casino_menu(message, self.userdata, self.bot)
@@ -104,42 +126,20 @@ class Automat_menu(Menu):
 
     def not_enough(self): self.bot.send_message(self.regular_id, "Не вистачає")
     def read_money(self): self.money = self.userdata.find_user_money(self.regular_id)
-    def write_money(self): self.userdata.set_user_money(self.regular_id, self.money)
+    def write_money(self):
+        self.userdata.set_user_money(self.regular_id, self.money)
+        self.userdata.write_to_file()
 
     def spin(self):
-        import random
-        shaiba_number = 60
-        elements = 5
-        result = []
-        string_result = ''
-        for i in range(elements):
-            result.append(random.randint(0, shaiba_number))
-            string_result+=self.make_smile_from_number(result[i])
-        prize = self.make_prize(result)
+        self.automat.spin_one_time()
+        prize = int(self.automat.make_prize()*self.my_stavka)
+        last_money = self.money
         self.money = self.money + prize
-        self.bot.send_message(self.regular_id, ''+string_result)
-        self.bot.send_message(self.regular_id, "Виграш 💰" + str(prize) + "  На рахунку 💰"+str(self.money))
+        self.bot.send_message(self.regular_id, '🎰       ' + self.automat.rez)
+        self.bot.send_message(self.regular_id, "Виграш 💰" + str(prize) +
+                              "\nНа рахунку 💰" + str(last_money) + " \+ 💰" + str(prize) + " \= __*💰" + str(self.money) + "*__",
+                              parse_mode= "MarkdownV2")
         self.write_money()
 
-    def make_smile_from_number(self, number):
-        if number < 3: return "☠"   # Погане
-        elif number < 6: return "💔" # Погане
-        elif number < 9: return "💩" # Погане
-        elif number < 14: return "🍎"   # Нейтральне
-        elif number < 20: return "🍒"   # Нейтральне
-        elif number < 26: return "🍌"   # Нейтральне
-        elif number < 31: return "🥑"   # Нейтральне
-        elif number < 36: return "🍕"   # Нейтральне
-        elif number < 42: return "🐟"   # Нейтральне
-        elif number < 47: return "🥥"  # Нейтральне
-        elif number < 52: return "❤"   # Хороше
-        elif number < 57: return "❄"   # Хороше
-        elif number < 59: return "💎"  # Класне
-        elif number == 59 : return "💯"  # Неймовірне
-        elif number == 60: return "🎁"
-        else: return ""
-    def make_prize(self, result, stavka):
-        score = 0
 
-        return max(self.my_stavka * (score / 10), 0)
 
