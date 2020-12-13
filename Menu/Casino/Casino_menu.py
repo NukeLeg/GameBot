@@ -24,8 +24,8 @@ class Casino_menu(Menu):
             menu = Lottery_menu(message, self.userdata, self.bot)
             return menu
         elif message.text == 'Рулетка':
-            from Menu.Casino.Rulette_menu import Rulette_menu
-            menu = Rulette_menu(message, self.userdata, self.bot)
+            from Menu.Casino.Roulette_menu import Roulette_menu
+            menu = Roulette_menu(message, self.userdata, self.bot)
             return menu
         elif message.text == 'Автомат':
             from Menu.Casino.Automat_menu import Automat_menu

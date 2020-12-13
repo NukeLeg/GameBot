@@ -9,8 +9,12 @@ class General_menu(Menu):
 
     def update(self, message):
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
-        keyboard.row('Профіль', 'Пошта')
-        keyboard.row('Казино', 'На вулицю')
+        keyboard.row('Профіль')
+        lottery_ticket = self.userdata.find_user_lottery_ticket(self.regular_id)
+        if lottery_ticket > 0:
+            keyboard.row('Казино (' +CONSTANT.SYMBOL_LOTTERY_TICKET+ str(lottery_ticket)+")")
+        else:
+            keyboard.row('Казино')
         self.bot.send_message(self.regular_id, 'Головне меню', reply_markup=keyboard)
 
     def press(self, message):

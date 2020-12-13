@@ -5,7 +5,7 @@ from Menu.General_menu import General_menu
 from Menu.Home.Home_menu import Home_menu
 from Menu.Casino.Casino_menu import Casino_menu
 from Menu.Casino.Automat_menu import Automat_menu
-from Menu.Casino.Rulette_menu import Rulette_menu
+from Menu.Casino.Roulette_menu import Roulette_menu
 from Menu.Casino.Lottery_menu import Lottery_menu
 from DataManager.Userdata import Userdata, NoUserExist
 import telebot
@@ -64,7 +64,7 @@ class MenuManager:
                 self.user_menu[id] = Casino_menu(message, self.userdata, self.bot)
             elif state == CONSTANT.NAME_AUTOMAT_MENU:
                 self.user_menu[id] = Automat_menu(message, self.userdata, self.bot)
-            elif state == CONSTANT.NAME_RULETTE_MENU:
+            elif state == CONSTANT.NAME_ROULETTE_MENU:
                 self.user_menu[id] = Rulette_menu(message, self.userdata, self.bot)
             elif state == CONSTANT.NAME_LOTTERY_MENU:
                 self.user_menu[id] = Lottery_menu(message, self.userdata, self.bot)
