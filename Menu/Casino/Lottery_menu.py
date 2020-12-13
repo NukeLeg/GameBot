@@ -82,7 +82,7 @@ class Lottery_menu(Menu):
         self.change_and_write(lottery_ticket = to_add)
         return CONSTANT.SYMBOL_LOTTERY_TICKET + str(to_add)
 
-    def poll(self, quiz_answer):
+    def update_poll(self, quiz_answer):
         if quiz_answer.options_ids[0] == 0:
             add_random_res = random.choice([self.add_random_money, self.add_random_gem, self.add_random_lottery_ticket])
             self.bot.send_message(self.regular_id, 'У коробці було ' + add_random_res())

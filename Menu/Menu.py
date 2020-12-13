@@ -14,5 +14,5 @@ class Menu:
         self.update(message)
     def update(self, message): pass
     def press(self, message): pass
-    def info(self, call): pass
-    def poll(self, quiz_answer): pass
+    def update_call(self, call): pass
+    def update_poll(self, quiz_answer): pass

@@ -12,7 +12,7 @@ class Roulette_menu(Menu):
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
         keyboard.row('🚪 Назад', '❌ На головне меню')
         image = open('content/images/roulette.jpg', 'rb')
-        self.bot.send_message(self.regular_id, "Рулетка")
+        self.bot.send_message(self.regular_id, "Рулетка",  reply_markup = keyboard)
 
         keyboard = telebot.types.InlineKeyboardMarkup(row_width = 6)
         keyboard.add(telebot.types.InlineKeyboardButton("🟥", callback_data="Red"),
@@ -85,6 +85,7 @@ class Roulette_menu(Menu):
                      telebot.types.InlineKeyboardButton("36", callback_data="36"))
         self.bot.send_photo(self.regular_id, image, caption = 'На що будемо ставити?', reply_markup = keyboard)
 
+
     def press(self, message):
         if 'Назад' in message.text:
             from Menu.Casino.Casino_menu import Casino_menu
@@ -95,3 +96,10 @@ class Roulette_menu(Menu):
             menu = General_menu(message, self.userdata, self.bot)
             return menu
         return self
+
+    def update_call(self, call):
+        self.numbers = call.data
+        self.bot.answer_callback_query(callback_query_id=call.id, text='Вибрано - \t' + self.numbers + '\nВкажіть суму', show_alert=True)
+        # self.bot.send_message(call.message.chat.id, "+")
+        #self.bot.answer_callback_query(call.id, text="Вибрано" + str(call), show_alert=True)
+        #print(call)

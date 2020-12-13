@@ -83,5 +83,13 @@ class MenuManager:
         for key in self.user_menu:
             if key == quiz_answer.user.id:
                 is_user_id = True
-        if is_user_id and type(self.user_menu[quiz_answer.user.id]) == Lottery_menu:
-            self.user_menu[quiz_answer.user.id].poll(quiz_answer)
+        if is_user_id:
+            self.user_menu[quiz_answer.user.id].update_poll(quiz_answer)
+
+    def update_call(self, call):
+        is_user_id = False
+        for key in self.user_menu:
+            if key == call.message.chat.id:
+                is_user_id = True
+        if is_user_id:
+            self.user_menu[call.message.chat.id].update_call(call)

@@ -17,6 +17,10 @@ def welcome(message):
 def conversation(message):
     menu_manager.update_menu(message)
 
+@bot.callback_query_handler(func=lambda call: True)
+def query_handler(call):
+    menu_manager.update_call(call)
+
 @bot.poll_answer_handler()
 def poll_message(quiz_answer):
     menu_manager.update_poll(quiz_answer)
