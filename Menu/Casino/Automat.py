@@ -11,12 +11,12 @@ class Automat:
     great = ["💯"]
     perfect = ["🎁"]
 
-    horrible_per = 1
-    bad_per = 3
-    normal_per = 7
-    good_per = 5
-    wonderful_per = 3
-    great_per = 2
+    horrible_per = 3
+    bad_per = 10
+    normal_per = 16
+    good_per = 12
+    wonderful_per = 7
+    great_per = 4
     perfect_per = 1
 
     def __init__(self):

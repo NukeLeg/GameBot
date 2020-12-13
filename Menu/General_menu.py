@@ -11,7 +11,7 @@ class General_menu(Menu):
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
         keyboard.row('Профіль', 'Пошта')
         keyboard.row('Казино', 'На вулицю')
-        self.bot.send_message(self.regular_id, '---', reply_markup=keyboard)
+        self.bot.send_message(self.regular_id, 'Головне меню', reply_markup=keyboard)
 
     def press(self, message):
         if message.text == 'Профіль':

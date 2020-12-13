@@ -10,7 +10,11 @@ class Home_menu(Menu):
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
         keyboard.row('Назад')
         money = self.userdata.find_user_money(self.regular_id)
-        self.bot.send_message(self.regular_id, '💰' + str(money), reply_markup = keyboard)
+        gem = self.userdata.find_user_gem(self.regular_id)
+        lottery_ticket = self.userdata.find_user_lottery_ticket(self.regular_id)
+        self.bot.send_message(self.regular_id, 'У мене \n' + CONSTANT.SYMBOL_MONEY + str(money)
+                              + '\n' + CONSTANT.SYMBOL_GEM + str(gem)
+                              + "\n"+ CONSTANT.SYMBOL_LOTTERY_TICKET + str(lottery_ticket), reply_markup = keyboard)
 
     def press(self, message):
         if message.text == 'Назад':

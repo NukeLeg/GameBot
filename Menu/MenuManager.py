@@ -6,7 +6,8 @@ from Menu.Home.Home_menu import Home_menu
 from Menu.Casino.Casino_menu import Casino_menu
 from Menu.Casino.Automat_menu import Automat_menu
 from Menu.Casino.Rulette_menu import Rulette_menu
-from DataManager.Userdata import Userdata
+from Menu.Casino.Lottery_menu import Lottery_menu
+from DataManager.Userdata import Userdata, NoUserExist
 import telebot
 
 class MenuManager:
@@ -15,16 +16,26 @@ class MenuManager:
         self.bot = bot
         self.userdata = Userdata()
 
+
     def start_new_user_menu(self, message):
         if self.check_is_exist(message):
+            self.send_hello_to_known(message)
+        else:
+            self.send_hello(message)
             self.add_new_user_to_database(message)
             self.add_menu_to_new_user(message)
     def check_is_exist(self, message):
-        return False
+        id = message.chat.id
+        return self.userdata.is_exist_user(id)
+    def send_hello_to_known(self, message):
+        self.bot.send_message(message.chat.id, "Hello, one more time")
+    def send_hello(self, message):
+        self.bot.send_message(message.chat.id, "Hello, GameBot greeting")
     def add_new_user_to_database(self, message):
-        pass # todo add new user to database
+        self.userdata.add_new_user(message.chat.id, message.from_user.first_name)
     def add_menu_to_new_user(self, message):
-        self.user_menu[message.chat.id] = Start_menu(message, self.userdata, self.bot) #todo add menu to operation memory
+        self.user_menu[message.chat.id] = Start_menu(message, self.userdata, self.bot)
+        self.userdata.write_to_file()
 
 
     def update_menu(self, message):
@@ -38,8 +49,9 @@ class MenuManager:
                 is_user_id = True
         if is_user_id == False:
             state = self.userdata.find_user_statemenu(id)
-            self.bot.send_message(id, "Користувача знайдено, id: " + str(id))
-            self.bot.send_message(id, "Загуржено із пам'яті стан меню: " + state)
+            if CONSTANT.SHOW_DEV_DATA:
+                self.bot.send_message(id, "Користувача знайдено, id: " + str(id))
+                self.bot.send_message(id, "Загуржено із пам'яті стан меню: " + state)
             if state == CONSTANT.NAME_START_MENU:
                 self.user_menu[id] = Start_menu(message, self.userdata, self.bot)
             elif state == CONSTANT.NAME_HELP_MENU:
@@ -54,6 +66,8 @@ class MenuManager:
                 self.user_menu[id] = Automat_menu(message, self.userdata, self.bot)
             elif state == CONSTANT.NAME_RULETTE_MENU:
                 self.user_menu[id] = Rulette_menu(message, self.userdata, self.bot)
+            elif state == CONSTANT.NAME_LOTTERY_MENU:
+                self.user_menu[id] = Lottery_menu(message, self.userdata, self.bot)
             else:
                 self.user_menu[id] = General_menu(message, self.userdata, self.bot)
     def update_menu_state(self, message):
@@ -64,4 +78,10 @@ class MenuManager:
             self.userdata.write_to_file()
 
 
-
+    def update_poll(self, quiz_answer):
+        is_user_id = False
+        for key in self.user_menu:
+            if key == quiz_answer.user.id:
+                is_user_id = True
+        if is_user_id and type(self.user_menu[quiz_answer.user.id]) == Lottery_menu:
+            self.user_menu[quiz_answer.user.id].poll(quiz_answer)

@@ -8,22 +8,30 @@ class Casino_menu(Menu):
 
     def update(self, message):
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
+        self.lottery_ticket = self.userdata.find_user_lottery_ticket(self.regular_id)
+        if self.lottery_ticket > 0:
+            keyboard.row('Лотерея (' + CONSTANT.SYMBOL_LOTTERY_TICKET + str(self.lottery_ticket)+")")
         keyboard.row('Рулетка')
         keyboard.row('Автомат')
         keyboard.row('Назад')
         money = self.userdata.find_user_money(self.regular_id)
-        self.bot.send_message(self.regular_id, 'У мене 💰' + str(money), reply_markup = keyboard)
+        self.bot.send_message(self.regular_id, 'У мене ' + CONSTANT.SYMBOL_MONEY + str(money), reply_markup = keyboard)
 
     def press(self, message):
-        if message.text == 'Рулетка':
+        self.lottery_ticket = self.userdata.find_user_lottery_ticket(self.regular_id)
+        if 'Лотерея' in message.text and self.lottery_ticket > 0:
+            from Menu.Casino.Lottery_menu import Lottery_menu
+            menu = Lottery_menu(message, self.userdata, self.bot)
+            return menu
+        elif message.text == 'Рулетка':
             from Menu.Casino.Rulette_menu import Rulette_menu
             menu = Rulette_menu(message, self.userdata, self.bot)
             return menu
-        if message.text == 'Автомат':
+        elif message.text == 'Автомат':
             from Menu.Casino.Automat_menu import Automat_menu
             menu = Automat_menu(message, self.userdata, self.bot)
             return menu
-        if message.text == 'Назад':
+        elif message.text == 'Назад':
             from Menu.General_menu import General_menu
             menu = General_menu(message, self.userdata, self.bot)
             return menu

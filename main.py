@@ -8,7 +8,6 @@ menu_manager = MenuManager(bot)
 @bot.message_handler(commands = ['start'])
 def welcome(message):
     menu_manager.start_new_user_menu(message)
-    bot.send_message(message.chat.id, "Hello, GameBot greeting")
 
 @bot.message_handler(commands = ['help'])
 def welcome(message):
@@ -16,7 +15,10 @@ def welcome(message):
 
 @bot.message_handler(content_types = ['text'])
 def conversation(message):
-    menu_manager.get_state_menu_if_user_is_not_in_operation_memory(message)
     menu_manager.update_menu(message)
+
+@bot.poll_answer_handler()
+def poll_message(quiz_answer):
+    menu_manager.update_poll(quiz_answer)
 
 bot.polling(none_stop=True)

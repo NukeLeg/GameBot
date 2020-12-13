@@ -8,18 +8,20 @@ class Automat_menu(Menu):
         self.my_stavka = 0
         self.last_stavka = 0
         self.money = 0
-        self.types_of_stavka = [1, 10, 100, 1000, 10000]
+        self.types_of_stavka = [1, 10, 100, 1000, 10000, 1000000]
         self.automat = Automat()
         super().__init__(message=message, userdata=userdata, bot=bot, state=CONSTANT.NAME_AUTOMAT_MENU, regular_id=regular_id)
 
     def update(self, message): # На початку
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
         self.money = self.userdata.find_user_money(self.regular_id)
-        if self.money <= 0:
-            keyboard.keyboard('Піти в банк і взяти кредит щоб відігратися')
-        elif self.money < 10:
+        if self.money + self.my_stavka > self.types_of_stavka[5]:
+            keyboard.row('Нереальна ставка', 'Гіганська ставка')
+        elif self.money + self.my_stavka < self.types_of_stavka[0]:
+            keyboard.row('Піти в банк і взяти кредит щоб відігратися')
+        elif self.money + self.my_stavka < self.types_of_stavka[1]:
             keyboard.row('Крихітна ставка')
-        elif self.money > 10000:
+        elif self.money + self.my_stavka > self.types_of_stavka[4]:
             keyboard.row('Гіганська ставка')
         keyboard.row('Мала ставка', 'Середня ставка', 'Велика ставка')
         keyboard.row("Інфо", 'Назад🚪', 'На головне меню❌')
@@ -27,24 +29,29 @@ class Automat_menu(Menu):
 
     def update1(self, message): # Після ставки
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
-        if self.money <= 0:
-            keyboard.keyboard('Піти в банк і взяти кредит щоб відігратися')
-        elif self.money < 10:
+        if self.money + self.my_stavka > self.types_of_stavka[5]:
+            keyboard.row('Нереальна ставка', 'Гіганська ставка')
+        elif self.money + self.my_stavka < self.types_of_stavka[0]:
+            keyboard.row('Піти в банк і взяти кредит щоб відігратися')
+        elif self.money + self.my_stavka < self.types_of_stavka[1]:
             keyboard.row('Крихітна ставка')
-        elif self.money > 10000:
+        elif self.money + self.my_stavka > self.types_of_stavka[4]:
             keyboard.row('Гіганська ставка')
         keyboard.row('Мала ставка', 'Середня ставка', 'Велика ставка')
         keyboard.row('Крутити 🎰')
         keyboard.row("Інфо", 'Назад🚪', 'На головне меню❌')
-        self.bot.send_message(self.regular_id, 'Ставка зроблена 💰' + str(self.my_stavka) + "\nНа рахунку 💰" + str(self.money), reply_markup = keyboard)
+        self.bot.send_message(self.regular_id, 'Ставка зроблена '+ CONSTANT.SYMBOL_MONEY + str(self.my_stavka) +
+                              "\nНа рахунку "+ CONSTANT.SYMBOL_MONEY + str(self.money), reply_markup = keyboard)
 
     def update2(self, message): # Після кручення якщо хватає грошей
         keyboard = telebot.types.ReplyKeyboardMarkup(True)
-        if self.money <= 0:
-            keyboard.keyboard('Піти в банк і взяти кредит щоб відігратися')
-        elif self.money < 10:
+        if self.money + self.my_stavka > self.types_of_stavka[5]:
+            keyboard.row('Нереальна ставка', 'Гіганська ставка')
+        elif self.money + self.my_stavka < self.types_of_stavka[0]:
+            keyboard.row('Піти в банк і взяти кредит щоб відігратися')
+        elif self.money + self.my_stavka < self.types_of_stavka[1]:
             keyboard.row('Крихітна ставка')
-        elif self.money > 10000:
+        elif self.money + self.my_stavka > self.types_of_stavka[4]:
             keyboard.row('Гіганська ставка')
         keyboard.row('Мала ставка', 'Середня ставка', 'Велика ставка')
         keyboard.row('Крутити знову 🎰')
@@ -88,6 +95,13 @@ class Automat_menu(Menu):
             self.write_money()
             self.update1(message)
         elif message.text == 'Гіганська ставка' and self.money + self.my_stavka  < self.types_of_stavka[4]: self.not_enough()
+        elif message.text == 'Нереальна ставка' and self.money + self.my_stavka  >= self.types_of_stavka[5]:
+            self.money = self.money + self.my_stavka
+            self.my_stavka = self.types_of_stavka[5]
+            self.money = self.money - self.types_of_stavka[5]
+            self.write_money()
+            self.update1(message)
+        elif message.text == 'Нереальна ставка' and self.money + self.my_stavka  < self.types_of_stavka[5]: self.not_enough()
         elif message.text == "Крутити 🎰" and self.my_stavka > 0:
             self.spin()
             self.last_stavka = self.my_stavka
@@ -96,11 +110,11 @@ class Automat_menu(Menu):
                 self.update2(message)
             else:
                 self.update(message)
-        elif message.text == "Крутити знову 🎰" and self.last_stavka > 0 and self.money > self.last_stavka:
+        elif message.text == "Крутити знову 🎰" and self.last_stavka > 0 and self.money >= self.last_stavka:
             self.my_stavka = self.last_stavka
             self.money = self.money - self.my_stavka
-            self.bot.send_message(self.regular_id, 'Ставка зроблена 💰' + str(self.my_stavka) +
-                                  "\nНа рахунку 💰" + str(self.money))
+            self.bot.send_message(self.regular_id, 'Ставка зроблена '+ CONSTANT.SYMBOL_MONEY + str(self.my_stavka) +
+                                  "\nНа рахунку "+ CONSTANT.SYMBOL_MONEY + str(self.money))
             self.spin()
             self.last_stavka = self.my_stavka
             self.my_stavka = 0
@@ -136,8 +150,10 @@ class Automat_menu(Menu):
         last_money = self.money
         self.money = self.money + prize
         self.bot.send_message(self.regular_id, '🎰       ' + self.automat.rez)
-        self.bot.send_message(self.regular_id, "Виграш 💰" + str(prize) +
-                              "\nНа рахунку 💰" + str(last_money) + " \+ 💰" + str(prize) + " \= __*💰" + str(self.money) + "*__",
+        self.bot.send_message(self.regular_id, "Виграш "+ CONSTANT.SYMBOL_MONEY + str(prize) +
+                              "\nНа рахунку "+ CONSTANT.SYMBOL_MONEY + str(last_money) +
+                              " \+ "+ CONSTANT.SYMBOL_MONEY + str(prize) +
+                              " \= __*"+ CONSTANT.SYMBOL_MONEY + str(self.money) + "*__",
                               parse_mode= "MarkdownV2")
         self.write_money()
 

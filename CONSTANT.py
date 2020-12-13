@@ -1,5 +1,5 @@
 BOT_TOKEN = "1339981204:AAGfBHbWW4Bycellhh4cqWtgD1YAwUmF7WQ"
-
+SHOW_DEV_DATA = True
 
 NAME_HELP_MENU = "NAME_HELP_MENU"
 NAME_START_MENU = "STATE_START_MENU"
@@ -17,6 +17,7 @@ NAME_HOME_FRENDLIST_MENU = "STATE_HOME_FRENDLIST_MENU"
 
 NAME_RULETTE_MENU = "STATE_RULETTE_MENU"
 NAME_AUTOMAT_MENU = "STATE_AUTOMAT_MENU"
+NAME_LOTTERY_MENU = "STATE_LOTTERY_MENU"
 
 NAME_PART_MENU = "STATE_PARK_MENU"
 NAME_GOFORAWALK_MENU = "STATE_GOFORAWALK_MENU"
@@ -40,6 +41,11 @@ NAME_BUSSTATION_MENU = "STATE_BUSSTATION_MENU"
 # Ігрові автомати (рулетка) (автомати) (блекждек) ()
 # Структури міста(банк) (арена) (кафе) (лікарня) (повозчік)
 # Тюрма
+
+
+SYMBOL_MONEY = "💰"
+SYMBOL_GEM = "💎"
+SYMBOL_LOTTERY_TICKET = "🎫"
 
 # 1361619110,Микола,STATE_GENERAL_MENU
 # {'content_type': 'text',
@@ -135,3 +141,18 @@ NAME_BUSSTATION_MENU = "STATE_BUSSTATION_MENU"
 #               'offset': 0,
 #               'length': 6,
 #               'type': 'bot_command'}]}}
+
+
+
+# {'poll_id': '5379662772663484536',
+# 'user': {
+#       'id': 389560429,
+#       'is_bot': False,
+#       'first_name': 'Nick',
+#       'username': 'DDD9000',
+#       'last_name': None,
+#       'language_code': 'ru',
+#       'can_join_groups': None,
+#       'can_read_all_group_messages': None,
+#       'supports_inline_queries': None},
+# 'options_ids': [4]}
