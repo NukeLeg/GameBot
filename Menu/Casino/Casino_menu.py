@@ -15,7 +15,7 @@ class Casino_menu(Menu):
         keyboard.row('Автомат')
         keyboard.row('Назад')
         money = self.userdata.find_user_money(self.regular_id)
-        self.bot.send_message(self.regular_id, 'У мене ' + CONSTANT.SYMBOL_MONEY + str(money), reply_markup = keyboard)
+        self.bot.send_message(self.regular_id, 'Де будемо грати?', reply_markup = keyboard)
 
     def press(self, message):
         self.lottery_ticket = self.userdata.find_user_lottery_ticket(self.regular_id)

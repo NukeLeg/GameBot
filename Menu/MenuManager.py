@@ -65,7 +65,7 @@ class MenuManager:
             elif state == CONSTANT.NAME_AUTOMAT_MENU:
                 self.user_menu[id] = Automat_menu(message, self.userdata, self.bot)
             elif state == CONSTANT.NAME_ROULETTE_MENU:
-                self.user_menu[id] = Rulette_menu(message, self.userdata, self.bot)
+                self.user_menu[id] = Roulette_menu(message, self.userdata, self.bot)
             elif state == CONSTANT.NAME_LOTTERY_MENU:
                 self.user_menu[id] = Lottery_menu(message, self.userdata, self.bot)
             else:
