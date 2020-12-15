@@ -35,12 +35,9 @@ class Userdata:
         data.to_csv('content/data/Users.csv', encoding='cp1251', index=False, header=True)
 
     def is_exist_user(self, id):
-        if len(self.users) == 0:
-            pass  #todo Обробити таке виключення
-        else:
-            for i in range(len(self.users)):
-                if self.users[i].id == id:
-                    return True
+        for i in range(len(self.users)):
+            if self.users[i].id == id:
+                return True
         return False
     def find_user(self, id):
         if len(self.users) == 0:

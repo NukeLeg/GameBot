@@ -86,6 +86,7 @@ class MenuManager:
         if is_user_id:
             self.user_menu[quiz_answer.user.id].update_poll(quiz_answer)
 
+
     def update_call(self, call):
         is_user_id = False
         for key in self.user_menu:
