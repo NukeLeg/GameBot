@@ -23,9 +23,13 @@ class Roulette_menu(Menu):
     def update_keyboard(self, message):
         keyboard = telebot.types.ReplyKeyboardMarkup(True, row_width=3)
         if len(self.bets)>0:
-            keyboard.row("Ставка", "Сума", "❌")
+            keyboard.row("Ставка \n(Колір, числа..)", "Сума", "❌")
+        sum = 0
         for key, i in zip(self.bets, range(len(self.bets))):
             keyboard.row(key, "{0}{1}\nСтавка {2}".format(CONSTANT.SYMBOL_MONEY, self.bets[key], i + 1), "❌ Ставка {}".format(i + 1))
+            sum = sum + self.bets[key]
+        if len(self.bets)>0:
+            keyboard.row("Загальна сума", "{}{}".format(CONSTANT.SYMBOL_MONEY,sum), "❌")
         if len(self.bets) > 0:
             keyboard.row('💸Крутити')
         keyboard.row('🚪 Назад', '❌ На головне меню')
