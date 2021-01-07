@@ -158,3 +158,17 @@ SYMBOL_LOTTERY_TICKET = "🎫"
 #       'can_read_all_group_messages': None,
 #       'supports_inline_queries': None},
 # 'options_ids': [4]}
+
+
+# {'poll_id': '5456502829965377605',
+# 'user': {
+#       'id': 1361619110,
+#       'is_bot': False,
+#       'first_name': 'Микола',
+#       'username': 'Logic_Way',
+#       'last_name': 'Ярославович',
+#       'language_code': 'en',
+#       'can_join_groups': None,
+#       'can_read_all_group_messages': None,
+#       'supports_inline_queries': None},
+# 'options_ids': [1]}
